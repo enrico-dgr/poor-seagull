@@ -5,11 +5,11 @@ import GE from "space-rock-scissor-paper-game-engine";
  */
 
 /**
- * @typedef { { type: 'CREATE' ; payload: Parameters< typeof GE.create > } } ActionCreate
+ * @typedef { { type: 'CREATE' ; payload: Pick<Game, "playerNum" | "maxMatchVictories"> } } ActionCreate
  */
 
 /**
- * @typedef { { type: 'CREATE_PLAYERS' ; payload: Parameters< typeof GE.createPlayers > } } ActionCreatePlayers
+ * @typedef { { type: 'CREATE_PLAYERS' ; payload: { names: string[], gameInstance: Game } } } ActionCreatePlayers
  */
 
 /**
@@ -17,7 +17,7 @@ import GE from "space-rock-scissor-paper-game-engine";
  */
 
 /**
- * @typedef { { type: 'PLAY_MATCH' ; payload: Parameters< typeof GE.playMatch > } } ActionPlayMatch
+ * @typedef { { type: 'PLAY_MATCH' ; payload: { (property) payload: [moveOne: Move, moveTwo: Move, withPlayerName: string, gameInstance: Game } } } ActionPlayMatch
  */
 
 /**
@@ -42,10 +42,13 @@ let gameInstance = {
 const gameReducer = (state, action) => {
 	switch (action.type) {
 		case "CREATE":
-			return GE.create(...action.payload);
+			return GE.create(action.payload);
 
 		case "CREATE_PLAYERS":
-			return GE.createPlayers(...action.payload);
+			return GE.createPlayers(
+				action.payload.names,
+				action.payload.gameInstance
+			);
 
 		case "START":
 			const players = GE.scrumblePlayers(action.payload.game.players);
@@ -60,18 +63,6 @@ const gameReducer = (state, action) => {
 	}
 };
 
-/**
- * @type { 'LOCAL' | 'WSS' }
- */
-const MODE = "LOCAL";
-
-/**
- * @typedef { Pick<WebSocket, 'onopen' | 'onmessage' | 'send' > } WssEmulator
- */
-
-/**
- * @type { WssEmulator }
- */
 const wssEmulator = {
 	/**
 	 * @param {MessageEvent<Game>} ev
@@ -89,9 +80,6 @@ const wssEmulator = {
 	},
 };
 
-/**
- * @type { WssEmulator | WebSocket }
- */
-const gameWss = MODE === "LOCAL" ? wssEmulator : new WebSocket("");
+const gameWss = wssEmulator;
 
 export default gameWss;
