@@ -10,7 +10,8 @@ import gameWss from "../../services/gameWss";
 
 const ReduxDispatcher = ({ dispatch }) => {
 	React.useEffect(() => {
-		gameWss.onmessage = (game) => dispatch(setLobby(JSON.parse(game.data)));
+		gameWss.onmessage = (message) =>
+			dispatch(setLobby(JSON.parse(message.data)));
 	}, []);
 
 	return <></>;
