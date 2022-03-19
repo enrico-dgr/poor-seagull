@@ -5,19 +5,15 @@ import { View, Text } from "react-native";
 
 // redux
 import { connect } from "react-redux";
-import { setGame } from "../../redux/ducks/game";
+import { setLobby } from "../../redux/ducks/lobby";
 import gameWss from "../../services/gameWss";
 
 const ReduxDispatcher = ({ dispatch }) => {
 	React.useEffect(() => {
-		gameWss.onmessage = (game) => dispatch(setGame(game));
+		gameWss.onmessage = (game) => dispatch(setLobby(JSON.parse(game.data)));
 	}, []);
 
-	return (
-		<View>
-			<Text>ReduxDispatcher</Text>
-		</View>
-	);
+	return <></>;
 };
 
 export default connect()(ReduxDispatcher);

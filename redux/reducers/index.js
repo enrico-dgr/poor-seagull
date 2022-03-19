@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import game from "../ducks/game";
+import lobby from "../ducks/lobby";
 
 export default combineReducers({
-	game,
+	lobby,
 });

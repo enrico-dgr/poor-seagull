@@ -29,7 +29,7 @@ const MyGameUi = ({ game }) => {
 }
 
 const mapStateToProps = state => ({
-    game: state.game
+    game: state.lobby.game
 })
 
 export default connect(mapStateToProps)(MyGameUi)

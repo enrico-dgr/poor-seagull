@@ -4,16 +4,16 @@ import GE from "space-rock-scissor-paper-game-engine";
  * @typedef { ReturnType< typeof GE.create > } Game
  */
 
-const SET_GAME = "generic/game/SET_GAME";
+const SET_LOBBY = "generic/game/SET_LOBBY";
 
 /**
  *
- * @param { Game } game
- * @returns { { type: SET_GAME; payload: { game: Game } } }
+ * @param { { game: Game; id: number; } } lobby
+ * @returns { { type: SET_LOBBY; payload: { lobby: { game: Game; id: number; } } } }
  */
-export const setGame = (game) => ({
-	type: SET_GAME,
-	payload: { game },
+export const setLobby = (lobby) => ({
+	type: SET_LOBBY,
+	payload: { lobby },
 });
 
 const INIT_STATE = {
@@ -23,12 +23,13 @@ const INIT_STATE = {
 		players: [],
 		playerNum: 0,
 	},
+	id: 0,
 };
 
 export default (state = INIT_STATE, action) => {
 	switch (action.type) {
-		case SET_GAME:
-			return { ...action.payload.game };
+		case SET_LOBBY:
+			return { ...action.payload.lobby };
 
 		default:
 			return state;
