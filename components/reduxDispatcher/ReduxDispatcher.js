@@ -10,16 +10,39 @@ import gameWss from "../../services/gameWss";
 
 const ReduxDispatcher = ({ dispatch }) => {
 	React.useEffect(() => {
-		gameWss.onmessage = (message) => {
-			if (typeof message.channel !== "string") return;
+		console.log("reduxDispatcher mount");
+		gameWss.onmessage = ({ data }) => {
+			let parsedData = {};
+			try {
+				parsedData = JSON.parse(data);
+			} catch (error) {
+				console.log("Error: wss data is invalid JSON");
+				return;
+			}
+			console.log(parsedData);
 
-			switch (message.channel) {
+			if (typeof parsedData.channel !== "string") {
+				console.log("Error: wss channel is not a string");
+				return;
+			}
+
+			if (typeof parsedData.message === "string") {
+				console.log(parsedData.message);
+				return;
+			}
+
+			if (!parsedData.response) {
+				console.log("Warning: wss response is undefined");
+				return;
+			}
+
+			switch (parsedData.channel) {
 				case "LOBBY":
-					dispatch(setLobby(JSON.parse(message.data)));
+					dispatch(setLobby(parsedData.response));
 					return;
 
 				case "USER":
-					dispatch(setUser(JSON.parse(message.data)));
+					dispatch(setUser(parsedData.response));
 					return;
 			}
 		};

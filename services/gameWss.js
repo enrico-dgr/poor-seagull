@@ -80,17 +80,4 @@ const wssEmulator = {
 
 const gameWss = new WebSocket("ws://localhost:3000/websockets");
 
-gameWss.onopen = () =>
-	gameWss.send(
-		JSON.stringify({
-			channel: "LOBBY",
-			action: {
-				type: "CREATE",
-				payload: {
-					playerNum: 4,
-					maxMatchVictories: 3,
-				},
-			},
-		})
-	);
 export default gameWss;

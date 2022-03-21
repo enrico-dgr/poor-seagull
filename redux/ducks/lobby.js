@@ -24,7 +24,7 @@ const INIT_STATE = {
 		players: [],
 		playerNum: 0,
 	},
-	id: 0,
+	id: -1,
 };
 
 export default (state = INIT_STATE, action) => {

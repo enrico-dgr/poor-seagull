@@ -1,121 +1,108 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
+	View,
+	Text,
+	StyleSheet,
+	ScrollView,
+	TouchableOpacity,
 } from "react-native";
 import { useFonts } from "expo-font";
 import CardLobby from "../../components/ui/lobbyCard/CardLobby";
 import ModalCustom from "../../components/ui/modal/ModalCustom";
 import PressableButton from "../../components/ui/PressableButton";
 import { useNavigate } from "react-router-dom";
-const LobbyList = () => {
-  const [state, setState] = useState({
-    visibleModal: false,
-  });
-  const [loaded] = useFonts({
-    Toons: require("../../assets/fonts/Mikey.ttf"),
-    Sponge: require("../../assets/fonts/Sponge.ttf"),
-  });
-  let navigate = useNavigate();
-  const changePage = (e) => {
-    navigate(`/tournament`);
-  };
-  return (
-    <View style={{ backgroundColor: "#CFE9FD", height: "100%", width: "100%" }}>
-      <Text style={styles.title}>LOBBIES LIST</Text>
-      <View style={{ alignItems: "center", marginTop: 10 }}>
-        <PressableButton
-          onPressCallBack={() => {
-            setState({ visibleModal: true });
-          }}
-          buttonText="NEW"
-        />
-      </View>
-      <ScrollView style={styles.container}>
-        <View style={{ alignItems: "center" }}>
-          <CardLobby
-            title="TITLE"
-            creator="Pippo"
-            nPlayers="15"
-            button="ENTER"
-            changePageCallback={changePage}
-          />
-          <CardLobby
-            title="TITLE"
-            creator="Pippo"
-            nPlayers="15"
-            button="ENTER"
-            changePageCallback={changePage}
-          />
-          <CardLobby
-            title="TITLE"
-            creator="Pippo"
-            nPlayers="15"
-            button="ENTER"
-            changePageCallback={changePage}
-          />
-          <CardLobby
-            title="TITLE"
-            creator="Pippo"
-            nPlayers="15"
-            button="ENTER"
-            changePageCallback={changePage}
-          />
-          <CardLobby
-            title="TITLE"
-            creator="Pippo"
-            nPlayers="15"
-            button="ENTER"
-            changePageCallback={changePage}
-          />
-          <CardLobby
-            title="TITLE"
-            creator="Pippo"
-            nPlayers="15"
-            button="ENTER"
-            changePageCallback={changePage}
-          />
-          <CardLobby
-            title="TITLE"
-            creator="Pippo"
-            nPlayers="15"
-            button="ENTER"
-            changePageCallback={changePage}
-          />
-          <CardLobby
-            title="TITLE"
-            creator="Pippo"
-            nPlayers="15"
-            button="ENTER"
-            changePageCallback={changePage}
-          />
-        </View>
-      </ScrollView>
+import gameWss from "../../services/gameWss";
+import { connect } from "react-redux";
+const LobbyList = (props) => {
+	const [state, setState] = useState({
+		visibleModal: false,
+	});
+	const [loaded] = useFonts({
+		Toons: require("../../assets/fonts/Mikey.ttf"),
+		Sponge: require("../../assets/fonts/Sponge.ttf"),
+	});
 
-      <ModalCustom
-        state={state.visibleModal}
-        onPressCallBack={() => setState({ visibleModal: false })}
-      />
-    </View>
-  );
+	let navigate = useNavigate();
+
+	const changePage = (e) => {
+		navigate(`/tournament`);
+	};
+
+	const lobbiesElements = React.useMemo(
+		(lobby) => {
+			const map = (lobby) => (
+				<CardLobby
+					button="ENTER"
+					creator="Creator"
+					changePageCallback={changePage}
+					key={lobby.id}
+					nPlayers="numero players"
+					title="Title"
+				/>
+			);
+			return props.allLobbies.map(map);
+		},
+		[props.allLobbies]
+	);
+
+	useEffect(() => {
+		const interval = setInterval(
+			() =>
+				gameWss.send(
+					JSON.stringify({
+						channel: "LOBBY",
+						action: {
+							type: "SHOW_ALL",
+							payload: {},
+						},
+					})
+				),
+			1000
+		);
+
+		return () => {
+			clearInterval(interval);
+		};
+	}, []);
+
+	return (
+		<View style={{ backgroundColor: "#CFE9FD", height: "100%", width: "100%" }}>
+			<Text style={styles.title}>LOBBIES LIST</Text>
+			<View style={{ alignItems: "center", marginTop: 10 }}>
+				<PressableButton
+					onPressCallBack={() => {
+						setState({ visibleModal: true });
+					}}
+					buttonText="NEW"
+				/>
+			</View>
+			<ScrollView style={styles.container}>
+				<View style={{ alignItems: "center" }}>{lobbiesElements}</View>
+			</ScrollView>
+
+			<ModalCustom
+				state={state.visibleModal}
+				onPressCallBack={() => setState({ visibleModal: false })}
+			/>
+		</View>
+	);
 };
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    height: "80%",
-    backgroundColor: "#CFE9FD",
-  },
-  title: {
-    textAlign: "center",
-    marginTop: 60,
-    marginBottom: 20,
-    fontSize: 50,
-    fontFamily: "Toons",
-  },
+	container: {
+		flex: 1,
+		width: "100%",
+		height: "80%",
+		backgroundColor: "#CFE9FD",
+	},
+	title: {
+		textAlign: "center",
+		marginTop: 60,
+		marginBottom: 20,
+		fontSize: 50,
+		fontFamily: "Toons",
+	},
 });
 
-export default LobbyList;
+const mapStateToProps = (state) => ({ allLobbies: state.lobby.allLobbies });
+
+export default connect(mapStateToProps)(LobbyList);
