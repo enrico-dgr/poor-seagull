@@ -15,8 +15,9 @@ const InputBox = (props) => {
 		<TextInput
 			style={styles.input}
 			placeholder={props.placeholder}
-			placeholderTextColor="#000"
+			placeholderTextColor="grey"
 			onChangeText={props.onChangeText}
+			value={props.value}
 			keyboardType={props.numeric ? "numeric" : undefined}
 		/>
 	);
@@ -31,6 +32,7 @@ InputBox.propTypes = {
 	onChangeText: PropTypes.func,
 	placeholder: PropTypes.string,
 	numeric: PropTypes.bool,
+	value: PropTypes.string,
 };
 
 const styles = StyleSheet.create({
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
 		margin: 12,
 		borderWidth: 1,
 		padding: 10,
-		color: "grey",
+		color: "#000",
 		backgroundColor: "rgba(255, 255, 255, 0.5)",
 		borderColor: "transparent",
 		borderRadius: 10,

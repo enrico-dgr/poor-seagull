@@ -26,7 +26,7 @@ const ModalCustom = (props) => {
 
 	const [state, setState] = useState({
 		playerNum: 2,
-		name: "",
+		name: `${props.username}'s lobby`,
 		maxMatchVictories: 2,
 	});
 
@@ -113,12 +113,17 @@ const ModalCustom = (props) => {
 							/>
 						</View>
 					</View>
-					<Text style={styles.text}>LOBBY NAME</Text>
-					<InputBox placeholder="Lobby's Name" onChangeText={onChangeName} />
+					<Text style={styles.text}>LOBBY'S NAME</Text>
+					<InputBox
+						placeholder="Lobby's Name"
+						value={state.name}
+						onChangeText={onChangeName}
+					/>
 					<Text style={styles.text}>MAX MATCH VICTORIES</Text>
 					<InputBox
 						placeholder="Number"
 						numeric={true}
+						value={state.maxMatchVictories + ""}
 						onChangeText={onChangeMaxVictories}
 					/>
 					<View style={{ marginTop: 65 }}>
@@ -173,6 +178,9 @@ const styles = StyleSheet.create({
 	},
 });
 
-const mapStateToProps = (state) => ({ gameId: state.lobby.id });
+const mapStateToProps = (state) => ({
+	gameId: state.lobby.id,
+	username: state.user.name,
+});
 
 export default connect(mapStateToProps)(ModalCustom);

@@ -24,6 +24,7 @@ const INIT_STATE = {
 		players: [],
 		playerNum: 0,
 	},
+	name: "",
 	id: -1,
 };
 
