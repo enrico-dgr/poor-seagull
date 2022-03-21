@@ -24,26 +24,32 @@ const LobbyList = (props) => {
 
 	let navigate = useNavigate();
 
-	const changePage = (e) => {
-		navigate(`/tournament`);
-	};
+	const changePage = (id) => () =>
+		gameWss.send(
+			JSON.stringify({
+				channel: "LOBBY",
+				action: {
+					type: "JOIN",
+					payload: {
+						id,
+					},
+				},
+			})
+		);
 
-	const lobbiesElements = React.useMemo(
-		(lobby) => {
-			const map = (lobby) => (
-				<CardLobby
-					button="ENTER"
-					creator="Creator"
-					changePageCallback={changePage}
-					key={lobby.id}
-					nPlayers="numero players"
-					title="Title"
-				/>
-			);
-			return props.allLobbies.map(map);
-		},
-		[props.allLobbies]
-	);
+	const lobbiesElements = React.useMemo(() => {
+		const map = (lobby) => (
+			<CardLobby
+				button="ENTER"
+				creator="Creator"
+				changePageCallback={changePage(lobby.id)}
+				key={lobby.id}
+				nPlayers="numero players"
+				title="Title"
+			/>
+		);
+		return props.allLobbies.map(map);
+	}, [props.allLobbies]);
 
 	useEffect(() => {
 		const interval = setInterval(
@@ -60,10 +66,14 @@ const LobbyList = (props) => {
 			1000
 		);
 
+		if (props.gameId > -1) {
+			navigate(`/tournament`);
+		}
+
 		return () => {
 			clearInterval(interval);
 		};
-	}, []);
+	}, [props.gameId]);
 
 	return (
 		<View style={{ backgroundColor: "#CFE9FD", height: "100%", width: "100%" }}>
@@ -103,6 +113,9 @@ const styles = StyleSheet.create({
 	},
 });
 
-const mapStateToProps = (state) => ({ allLobbies: state.lobby.allLobbies });
+const mapStateToProps = (state) => ({
+	allLobbies: state.lobby.allLobbies,
+	gameId: state.lobby.id,
+});
 
 export default connect(mapStateToProps)(LobbyList);

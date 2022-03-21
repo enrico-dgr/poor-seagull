@@ -30,7 +30,7 @@ const INIT_STATE = {
 export default (state = INIT_STATE, action) => {
 	switch (action.type) {
 		case SET_LOBBY:
-			return { ...action.payload.lobby };
+			return { ...state, ...action.payload.lobby };
 
 		default:
 			return state;
