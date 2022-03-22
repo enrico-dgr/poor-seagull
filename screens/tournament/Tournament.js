@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React from "react";
+import { View, Text } from "react-native";
 import { useFonts } from "expo-font";
 // REACT ROUTER DOM
 import { useNavigate } from "react-router-dom";
@@ -8,115 +8,105 @@ import PressableButton from "../../components/ui/PressableButton";
 import FlatUsers from "../../components/ui/flatUsers/FlatUsers";
 import { connect } from "react-redux";
 import gameWss from "../../services/gameWss";
+import style from "./style";
+import { findIndexMatchToPlay } from "space-rock-scissor-paper-game-engine/lib/utils";
 
 const Tournament = (props) => {
-    const [loaded] = useFonts({
-        Toons: require("../../assets/fonts/Mikey.ttf"),
-        Sponge: require("../../assets/fonts/Sponge.ttf"),
-    });
+	const [loaded] = useFonts({
+		Toons: require("../../assets/fonts/Mikey.ttf"),
+		Sponge: require("../../assets/fonts/Sponge.ttf"),
+	});
 
-    let navigate = useNavigate();
-    const askWssToStartGame = () => {
-        gameWss.send(
-            JSON.stringify({
-                channel: "LOBBY",
-                action: {
-                    type: "GAME_START",
-                    payload: {
-                        id: props.gameId,
-                    },
-                },
-            })
-        );
-        // navigate(`/game`);
-    };
+	let navigate = useNavigate();
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.modalContent}>
-                {/* {_renderModalContent()} */}
-                <Text style={styles.title}>LOBBY NAME</Text>
-                <Text style={styles.text}>Players 8/16</Text>
-                {/* <ScrollView style={{ height: "60%" }}> */}
-                {props.phase === 0 ? (
-                    <PressableButton
-                        position={{ bottom: 100, right: 80 }}
-                        buttonText="Start"
-                        onPressCallBack={askWssToStartGame}
-                    />
-                ) : (
-                    // <FlatUsers />
+	React.useEffect(() => {
+		if (props.availableMatch) {
+			navigate(`/game`);
+		}
+	}, [props.availableMatch]);
 
-                    <>
-                        <View>
-                            <Collapse phaseTitle="FASE1" />
-                        </View>
-                        <View>
-                            <Collapse phaseTitle="FASE1" />
-                        </View>
-                        <View>
-                            <Collapse phaseTitle="FASE1" />
-                        </View>
-                        <View>
-                            <Collapse phaseTitle="FASE1" />
-                        </View>
-                        <View>
-                            <Collapse phaseTitle="FASE1" />
-                        </View>
-                    </>
-                )}
-                {/* </ScrollView> */}
-            </View>
-        </View>
-    );
+	const askWssToStartGame = () => {
+		gameWss.send(
+			JSON.stringify({
+				channel: "LOBBY",
+				action: {
+					type: "GAME_START",
+					payload: {
+						id: props.gameId,
+					},
+				},
+			})
+		);
+	};
+
+	const getPhasesElements = React.useCallback(
+		(matches) => {
+			console.log(matches);
+			const maxPhase = matches[matches.length - 1].phase;
+			const buffer = [];
+			for (let phase = 1; phase <= maxPhase; phase++) {
+				const bufferMatchesByPhase = [];
+				for (let j = 0; j < matches.length; j++) {
+					if (matches[j].phase === phase) {
+						bufferMatchesByPhase.push(matches[j]);
+					}
+				}
+				console.log(bufferMatchesByPhase);
+				buffer.push([...bufferMatchesByPhase]);
+			}
+			console.log(buffer);
+			return buffer.map((phase, index) => (
+				<View key={`${props.nameLobby}-phase${index + 1}`}>
+					<Collapse phaseTitle={`Phase ${index + 1}`} matches={phase} />
+				</View>
+			));
+		},
+		[props.nameLobby]
+	);
+
+	return (
+		<View style={style.container}>
+			<View style={style.modalContent}>
+				{/* {_renderModalContent()} */}
+				<Text style={style.title}>{props.nameLobby}</Text>
+				<Text style={style.text}>
+					Players {props.users.length}/{props.maxPlayerNum}
+				</Text>
+				{/* <ScrollView style={{ height: "60%" }}> */}
+				{props.phase === 0 && props.matches.length < 1 ? (
+					<>
+						{props.userId === props.creator.id ? (
+							<PressableButton
+								position={{ bottom: 100, right: 80 }}
+								buttonText="Start"
+								onPressCallBack={askWssToStartGame}
+							/>
+						) : (
+							<Text style={style.text}>
+								Wait for {props.creator.name} to start the game
+							</Text>
+						)}
+						<FlatUsers users={props.users} />
+					</>
+				) : (
+					getPhasesElements(props.matches)
+				)}
+				{/* </ScrollView> */}
+			</View>
+		</View>
+	);
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "#CFE9FD",
-    },
-    button: {
-        backgroundColor: "lightblue",
-        padding: 12,
-        margin: 16,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 4,
-        borderColor: "rgba(0, 0, 0, 0.1)",
-    },
-    modalContent: {
-        height: "100%",
-        backgroundColor: "#CFE9FD",
-        width: "100%",
-        padding: 22,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 4,
-        borderColor: "rgba(0, 0, 0, 0.1)",
-    },
-    title: {
-        marginTop: 60,
-        marginBottom: 20,
-        fontSize: 50,
-        fontFamily: "Toons",
-        textAlign: "center",
-    },
-    buttonContainer: {
-        alignItems: "center",
-    },
-    text: {
-        textAlign: "center",
-        fontFamily: "Toons",
-        fontSize: 30,
-    },
-});
-
 const mapStateToProps = (state) => ({
-    phase: state.lobby.game.phase ?? 0,
-    gameId: state.lobby.id,
+	phase: state.lobby.game.phase ?? 0,
+	gameId: state.lobby.id,
+	availableMatch: findIndexMatchToPlay(state.user.id, state.lobby.game) > -1,
+	maxPlayerNum: state.lobby.game.playerNum,
+	users: state.lobby.users,
+	nameLobby: state.lobby.name,
+	creator: state.lobby.creator,
+	userId: state.user.id,
+	matches: state.lobby.game.matches,
 });
 
 export default connect(mapStateToProps)(Tournament);

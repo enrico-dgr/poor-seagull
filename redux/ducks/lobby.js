@@ -26,6 +26,7 @@ const INIT_STATE = {
 	},
 	name: "",
 	id: -1,
+	users: [],
 };
 
 export default (state = INIT_STATE, action) => {
