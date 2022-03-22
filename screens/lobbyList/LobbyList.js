@@ -45,34 +45,46 @@ const LobbyList = (props) => {
 				changePageCallback={changePage(lobby.id)}
 				key={lobby.id}
 				nPlayers="numero players"
-				title="Title"
+				title={lobby.name}
 			/>
 		);
 		return props.allLobbies.map(map);
 	}, [props.allLobbies]);
 
 	useEffect(() => {
-		const interval = setInterval(
-			() =>
-				gameWss.send(
-					JSON.stringify({
-						channel: "LOBBY",
-						action: {
-							type: "SHOW_ALL",
-							payload: {},
-						},
-					})
-				),
-			1000
+		// subscribe
+		gameWss.send(
+			JSON.stringify({
+				channel: "LOBBY",
+				action: {
+					type: "SHOW_ALL",
+					payload: {
+						show: true,
+					},
+				},
+			})
 		);
 
+		return () => {
+			// unsubscribe
+			gameWss.send(
+				JSON.stringify({
+					channel: "LOBBY",
+					action: {
+						type: "SHOW_ALL",
+						payload: {
+							show: false,
+						},
+					},
+				})
+			);
+		};
+	}, []);
+
+	useEffect(() => {
 		if (props.gameId > -1) {
 			navigate(`/tournament`);
 		}
-
-		return () => {
-			clearInterval(interval);
-		};
 	}, [props.gameId]);
 
 	return (
