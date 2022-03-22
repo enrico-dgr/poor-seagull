@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // STYLE
 import { useFonts } from "expo-font";
 // REACT ROUTER DOM
@@ -6,14 +6,13 @@ import { useNavigate } from "react-router-dom";
 // RN COMPONENTS
 import { View, StyleSheet, Text, Image } from "react-native";
 import Swiper from "react-native-web-swiper";
-import VideoBackground from "../../components/ui/videoBackground/VideoBackground";
-import PressableButton from "../../components/ui/PressableButton";
-import PressableCircle from "../../components/ui/PressableCircle";
 import Paper from "../../assets/icon/newspaper.png";
 import Scissor from "../../assets/icon/scissors.png";
 import Rock from "../../assets/icon/stone.png";
+// import Question from "../../assets/icon/questionmark.png";
 
 const Game = () => {
+    const [modalVisible, setModalVisible] = useState(false);
     let navigate = useNavigate();
     const [loaded] = useFonts({
         Toons: require("../../assets/fonts/Mikey.ttf"),
@@ -75,6 +74,10 @@ const Game = () => {
         </>
     );
 };
+{
+    /* <Image style={styles.slideChoice} source={props.enemychoice} />
+<Image style={styles.slideChoice} source={Question} /> */
+}
 
 const styles = StyleSheet.create({
     container: {

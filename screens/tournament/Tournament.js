@@ -41,7 +41,7 @@ const Tournament = (props) => {
                 {props.phase === 0 ? (
                     <PressableButton
                         position={{ bottom: 100, right: 80 }}
-                        buttonText="Start Game"
+                        buttonText="Start"
                         onPressCallBack={askWssToStartGame}
                     />
                 ) : (
