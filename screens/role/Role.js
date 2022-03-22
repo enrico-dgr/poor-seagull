@@ -19,6 +19,12 @@ import { connect } from "react-redux";
 
 // websocket
 import gameWss from "../../services/gameWss";
+import CardRules from "../../components/ui/cardRules/CardRules";
+// Images
+import SeagulOne from "../../assets/seagul/seagull1.png";
+import SeagulTwo from "../../assets/seagul/seagull2.png";
+import SeaOne from "../../assets/seagul/sea1.jpeg";
+import SeaTwo from "../../assets/seagul/sea2.jpeg";
 
 const Role = (props) => {
 	let navigate = useNavigate();
@@ -61,13 +67,25 @@ const Role = (props) => {
 		<View style={styles.container}>
 			<Swiper>
 				<View style={[styles.slideContainer, styles.slide1]}>
-					<Text>Game Rules 1</Text>
+					<CardRules
+						ruleTitle="Welcome"
+						textOne="Lorem Ipsum is simply dummy text of  "
+						textTwo="Lorem Ipsum is simply dummy text of "
+						ruleImage={SeagulOne}
+						imageBg={SeaOne}
+					/>
 				</View>
 				<View style={[styles.slideContainer, styles.slide2]}>
-					<Text>Game Rules 2</Text>
+					<CardRules
+						ruleTitle="Rules"
+						textOne="Lorem Ipsum is simply dummy text of "
+						textTwo="Lorem Ipsum is simply dummy text of "
+						ruleImage={SeagulTwo}
+						imageBg={SeaTwo}
+					/>
 				</View>
 				<View style={[styles.slideContainer, styles.slide3]}>
-					<Text>Input Name</Text>
+					<Text style={styles.text}>Input Username</Text>
 					<InputBox placeholder="Username" onChangeText={onChangeText} />
 					<PressableButton onPressCallBack={sendNameToWss} buttonText="ENTER" />
 				</View>
@@ -84,6 +102,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	text: {
+		fontFamily: "Toons",
+		fontSize: 20,
 	},
 	slide1: {
 		backgroundColor: "rgba(20,20,200,0.3)",
