@@ -49,7 +49,6 @@ const Role = (props) => {
 		});
 	};
 	React.useEffect(() => {
-		console.log(state.username);
 		if (props.name === state.username) {
 			navigate(`/lobbylist`);
 		}
