@@ -27,7 +27,7 @@
     "redux": "^4.1.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.1",
-    "space-rock-scissor-paper-game-engine": "^0.2.0",
+    "space-rock-scissor-paper-game-engine": "^0.3.3",
     "space-rock-scissor-paper-ui": "^0.1.0"
   },
   "devDependencies": {
