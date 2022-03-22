@@ -11,7 +11,7 @@ export const setUser = (user) => ({
 });
 
 const INIT_STATE = {
-	name: "",
+	name: "unknown-name",
 	id: 0,
 };
 
