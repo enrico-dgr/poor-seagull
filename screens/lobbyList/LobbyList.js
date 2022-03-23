@@ -42,11 +42,16 @@ const LobbyList = (props) => {
 	const lobbiesElements = React.useMemo(() => {
 		const map = (lobby) => (
 			<CardLobby
-				button="ENTER"
-				creator={lobby?.creator?.name}
+				button={"ENTER"}
+				buttonDisabled={lobby.game.phase > 0}
+				owner={lobby?.creator?.name}
 				changePageCallback={changePage(lobby.id)}
 				key={lobby?.id}
-				nPlayers={`${lobby?.users?.length}/${lobby?.game?.playerNum} `}
+				nPlayers={
+					lobby.game.phase > 0
+						? undefined
+						: `${lobby?.users?.length}/${lobby?.game?.playerNum} `
+				}
 				title={lobby?.name}
 			/>
 		);

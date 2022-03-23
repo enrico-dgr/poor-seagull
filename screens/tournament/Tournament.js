@@ -29,7 +29,11 @@ const Tournament = (props) => {
 		if (props.availableMatch) {
 			navigate(`/game`);
 		}
-	}, [props.availableMatch]);
+
+		if (props.gameId < 0) {
+			navigate(`/lobbylist`);
+		}
+	}, [props.availableMatch, props.gameId]);
 
 	const askWssToStartGame = () => {
 		gameWss.send(
@@ -37,6 +41,20 @@ const Tournament = (props) => {
 				channel: "LOBBY",
 				action: {
 					type: "GAME_START",
+					payload: {
+						id: props.gameId,
+					},
+				},
+			})
+		);
+	};
+
+	const askWssToExitGame = () => {
+		gameWss.send(
+			JSON.stringify({
+				channel: "LOBBY",
+				action: {
+					type: "EXIT",
 					payload: {
 						id: props.gameId,
 					},
@@ -75,6 +93,11 @@ const Tournament = (props) => {
 				<View style={{ width: "80%" }}>
 					<Text style={style.title}>{props.nameLobby}</Text>
 				</View>
+				<PressableButton
+					position={{ bottom: 100, right: 80 }}
+					buttonText="Exit"
+					onPressCallBack={askWssToExitGame}
+				/>
 				{props.phase === 0 && props.matches.length < 1 ? (
 					<>
 						<Text style={style.text}>

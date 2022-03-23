@@ -8,52 +8,57 @@ import style from "./style";
 import PropTypes from "prop-types";
 
 const CardLobby = (props) => {
-    const [loaded] = useFonts({
-        Toons: require("../../../assets/fonts/Mikey.ttf"),
-        Sponge: require("../../../assets/fonts/Sponge.ttf"),
-    });
+	const [loaded] = useFonts({
+		Toons: require("../../../assets/fonts/Mikey.ttf"),
+		Sponge: require("../../../assets/fonts/Sponge.ttf"),
+	});
 
-    const changePageCallback = (e) => {
-        props.changePageCallback();
-    };
-    if (!loaded) {
-        return null;
-    }
-    return (
-        <View style={style.card}>
-            <View style={style.titleContainer}>
-                <Text style={style.title}>{props.title}</Text>
-            </View>
-            <Text style={style.text}>Players: {props.nPlayers}</Text>
-            <Text style={style.text}>Creator: {props.creator}</Text>
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Pressable
-                    onPress={changePageCallback}
-                    style={({ pressed }) => [
-                        {
-                            backgroundColor: pressed ? "#6B9DFA" : "#567df7",
-                        },
-                        style.buttonContainer,
-                    ]}
-                >
-                    <Text style={style.textPress}>{props.button}</Text>
-                </Pressable>
-            </View>
-        </View>
-    );
+	if (!loaded) {
+		return null;
+	}
+	return (
+		<View style={style.card}>
+			<View style={style.titleContainer}>
+				<Text style={style.title}>{props.title}</Text>
+			</View>
+			{!!props.nPlayers && (
+				<Text style={style.text}>Players: {props.nPlayers}</Text>
+			)}
+			<Text style={style.text}>Owner: {props.owner}</Text>
+			<View style={{ justifyContent: "center", alignItems: "center" }}>
+				<Pressable
+					onPress={props.buttonDisabled && props.onPressButton}
+					style={({ pressed }) => [
+						{
+							backgroundColor: pressed ? "#6B9DFA" : "#567df7",
+						},
+						style.buttonContainer,
+						props.buttonDisabled && {
+							backgroundColor: "gray",
+						},
+					]}
+				>
+					<Text style={style.textPress}>{props.button}</Text>
+				</Pressable>
+			</View>
+		</View>
+	);
 };
 CardLobby.defaultProps = {
-    title: "",
-    nPlayers: "",
-    creator: "",
-    button: "",
+	button: "",
+	buttonDisabled: false,
+	onPressButton: () => undefined,
+	owner: "",
+	title: "",
 };
 
 CardLobby.propTypes = {
-    title: PropTypes.string.isRequired,
-    nPlayers: PropTypes.string.isRequired,
-    creator: PropTypes.string.isRequired,
-    button: PropTypes.string,
+	button: PropTypes.string,
+	buttonDisabled: PropTypes.bool,
+	nPlayers: PropTypes.string,
+	onPressButton: PropTypes.func,
+	owner: PropTypes.string.isRequired,
+	title: PropTypes.string,
 };
 
 export default CardLobby;
