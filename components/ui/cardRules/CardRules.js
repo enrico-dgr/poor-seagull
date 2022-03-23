@@ -1,55 +1,46 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
+//  RN
+import { View, Text, Image, ImageBackground } from "react-native";
+// STYLE
+import { useFonts } from "expo-font";
+import style from "./style";
+// PROPTYPES
+import PropTypes from "prop-types";
 
 const CardRules = (props) => {
-  return (
-    <ImageBackground
-      source={props.imageBg}
-      resizeMode="cover"
-      style={styles.bg}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>{props.ruleTitle}</Text>
-        <Image style={styles.slideContainer} source={props.ruleImage} />
-        <Text style={styles.text}>{props.textOne}</Text>
-        <Text style={styles.text}>{props.textTwo}</Text>
-      </View>
-    </ImageBackground>
-  );
+    const [loaded] = useFonts({
+        Toons: require("../../../assets/fonts/Mikey.ttf"),
+        Sponge: require("../../../assets/fonts/Sponge.ttf"),
+    });
+    if (!loaded) {
+        return null;
+    }
+    return (
+        <ImageBackground
+            source={props.imageBg}
+            resizeMode="cover"
+            style={style.bg}
+        >
+            <View style={style.container}>
+                <Text style={style.title}>{props.ruleTitle}</Text>
+                <Image style={style.slideContainer} source={props.ruleImage} />
+                <Text style={style.text}>{props.textOne}</Text>
+                <Text style={style.text}>{props.textTwo}</Text>
+            </View>
+        </ImageBackground>
+    );
+};
+CardRules.defaultProps = {
+    ruleTitle: "",
+    ruleImage: "",
+    textOne: "",
+    textTwo: "",
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  slideContainer: {
-    marginRight: 50,
-    width: 305,
-    height: 259,
-  },
-  text: {
-    marginTop: 20,
-    fontFamily: "Sponge",
-    fontSize: 20,
-    textAlign: "center",
-    marginBottom: 10,
-    marginHorizontal: 20,
-    color: "blue",
-  },
-  title: {
-    fontFamily: "Toons",
-    fontSize: 50,
-  },
-  bg: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0,0,0, 0.4)",
-    opacity: 1,
-  },
-});
-
+CardRules.propTypes = {
+    ruleTitle: PropTypes.string.isRequired,
+    ruleImage: PropTypes.string.isRequired,
+    textOne: PropTypes.string,
+    textTwo: PropTypes.string,
+};
 export default CardRules;

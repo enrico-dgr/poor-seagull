@@ -1,14 +1,5 @@
 import { StyleSheet } from "react-native";
-
 export default StyleSheet.create({
-    container: {
-        flex: 1,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "#CFE9FD",
-        alignItems: "center",
-        justifyContent: "center",
-    },
     button: {
         backgroundColor: "lightblue",
         padding: 12,
@@ -21,7 +12,6 @@ export default StyleSheet.create({
     modalContent: {
         height: "100%",
         backgroundColor: "#CFE9FD",
-        width: "80%",
         padding: 22,
         justifyContent: "center",
         alignItems: "center",
@@ -39,9 +29,21 @@ export default StyleSheet.create({
         alignItems: "center",
     },
     text: {
-        marginBottom: 20,
         textAlign: "center",
         fontFamily: "Toons",
         fontSize: 30,
+    },
+    viewPlayersNumber: {
+        width: "70%",
+        justifyContent: "space-evenly",
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 8,
+    },
+    viewButtonsCircles: {
+        marginBottom: 40,
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "space-evenly",
     },
 });
