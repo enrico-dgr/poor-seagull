@@ -16,109 +16,107 @@ import gameWss from "../../services/gameWss";
 import { connect } from "react-redux";
 
 const LobbyList = (props) => {
-    const [state, setState] = useState({
-        visibleModal: false,
-    });
-    const [loaded] = useFonts({
-        Toons: require("../../assets/fonts/Mikey.ttf"),
-        Sponge: require("../../assets/fonts/Sponge.ttf"),
-    });
+	const [state, setState] = useState({
+		visibleModal: false,
+	});
+	const [loaded] = useFonts({
+		Toons: require("../../assets/fonts/Mikey.ttf"),
+		Sponge: require("../../assets/fonts/Sponge.ttf"),
+	});
 
-    let navigate = useNavigate();
+	let navigate = useNavigate();
 
-    const changePage = (id) => () =>
-        gameWss.send(
-            JSON.stringify({
-                channel: "LOBBY",
-                action: {
-                    type: "JOIN",
-                    payload: {
-                        id,
-                    },
-                },
-            })
-        );
+	const changePage = (id) => () =>
+		gameWss.send(
+			JSON.stringify({
+				channel: "LOBBY",
+				action: {
+					type: "JOIN",
+					payload: {
+						id,
+					},
+				},
+			})
+		);
 
-    const lobbiesElements = React.useMemo(() => {
-        const map = (lobby) => (
-            <CardLobby
-                button="ENTER"
-                creator="Creator"
-                changePageCallback={changePage(lobby.id)}
-                key={lobby.id}
-                nPlayers={`${props.users.length}/${props.maxPlayerNum} `}
-                title={lobby.name}
-            />
-        );
-        return props.allLobbies.map(map);
-    }, [props.allLobbies]);
+	const lobbiesElements = React.useMemo(() => {
+		const map = (lobby) => (
+			<CardLobby
+				button="ENTER"
+				creator={lobby?.creator?.name}
+				changePageCallback={changePage(lobby.id)}
+				key={lobby?.id}
+				nPlayers={`${lobby?.users?.length}/${lobby?.game?.playerNum} `}
+				title={lobby?.name}
+			/>
+		);
+		return props.allLobbies.map(map);
+	}, [props.allLobbies]);
 
-    useEffect(() => {
-        // subscribe
-        gameWss.send(
-            JSON.stringify({
-                channel: "LOBBY",
-                action: {
-                    type: "SHOW_ALL",
-                    payload: {
-                        show: true,
-                    },
-                },
-            })
-        );
+	useEffect(() => {
+		// subscribe
+		gameWss.send(
+			JSON.stringify({
+				channel: "LOBBY",
+				action: {
+					type: "SHOW_ALL",
+					payload: {
+						show: true,
+					},
+				},
+			})
+		);
 
-        return () => {
-            // unsubscribe
-            gameWss.send(
-                JSON.stringify({
-                    channel: "LOBBY",
-                    action: {
-                        type: "SHOW_ALL",
-                        payload: {
-                            show: false,
-                        },
-                    },
-                })
-            );
-        };
-    }, []);
-    useEffect(() => {
-        if (props.gameId > -1) {
-            navigate(`/tournament`);
-        }
-    }, [props.gameId]);
+		return () => {
+			// unsubscribe
+			gameWss.send(
+				JSON.stringify({
+					channel: "LOBBY",
+					action: {
+						type: "SHOW_ALL",
+						payload: {
+							show: false,
+						},
+					},
+				})
+			);
+		};
+	}, []);
+	useEffect(() => {
+		if (props.gameId > -1) {
+			navigate(`/tournament`);
+		}
+	}, [props.gameId]);
 
-    if (!loaded) {
-        return null;
-    }
-    return (
-        <View style={style.view}>
-            <Text style={style.title}>LOBBIES LIST</Text>
-            <View style={{ alignItems: "center", marginTop: 10 }}>
-                <PressableButton
-                    onPressCallBack={() => {
-                        setState({ visibleModal: true });
-                    }}
-                    buttonText="NEW"
-                />
-            </View>
-            <ScrollView style={style.container}>
-                <View style={{ alignItems: "center" }}>{lobbiesElements}</View>
-            </ScrollView>
+	if (!loaded) {
+		return null;
+	}
+	return (
+		<View style={style.view}>
+			<Text style={style.title}>LOBBIES LIST</Text>
+			<View style={{ alignItems: "center", marginTop: 10 }}>
+				<PressableButton
+					onPressCallBack={() => {
+						setState({ visibleModal: true });
+					}}
+					buttonText="NEW"
+				/>
+			</View>
+			<ScrollView style={style.container}>
+				<View style={{ alignItems: "center" }}>{lobbiesElements}</View>
+			</ScrollView>
 
-            <ModalCustom
-                state={state.visibleModal}
-                onPressCallBack={() => setState({ visibleModal: false })}
-            />
-        </View>
-    );
+			<ModalCustom
+				state={state.visibleModal}
+				onPressCallBack={() => setState({ visibleModal: false })}
+			/>
+		</View>
+	);
 };
 
 const mapStateToProps = (state) => ({
-    allLobbies: state.lobby.allLobbies,
-    gameId: state.lobby.id,
-    maxPlayerNum: state.lobby.game.playerNum,
-    users: state.lobby.users,
+	allLobbies: state.lobby.allLobbies,
+	gameId: state.lobby.id,
 });
 
 export default connect(mapStateToProps)(LobbyList);
