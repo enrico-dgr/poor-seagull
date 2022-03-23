@@ -1,19 +1,30 @@
 import { StyleSheet } from "react-native";
-
 export default StyleSheet.create({
     container: {
         flex: 1,
         width: "100%",
         height: "100%",
         backgroundColor: "#CFE9FD",
+        marginTop: 15,
+        // justifyContent: "center",
         alignItems: "center",
-        justifyContent: "center",
+    },
+    viewUsers: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        width: "100%",
+        height: 50,
+        backgroundColor: "white",
+        marginBottom: 20,
+        borderRadius: 10,
+        padding: 8,
     },
     button: {
         backgroundColor: "lightblue",
         padding: 12,
         margin: 16,
-        justifyContent: "center",
+
         alignItems: "center",
         borderRadius: 4,
         borderColor: "rgba(0, 0, 0, 0.1)",
@@ -21,7 +32,6 @@ export default StyleSheet.create({
     modalContent: {
         height: "100%",
         backgroundColor: "#CFE9FD",
-        width: "80%",
         padding: 22,
         justifyContent: "center",
         alignItems: "center",
@@ -39,9 +49,10 @@ export default StyleSheet.create({
         alignItems: "center",
     },
     text: {
-        marginBottom: 20,
         textAlign: "center",
-        fontFamily: "Toons",
-        fontSize: 30,
+        fontFamily: "Sponge",
+        fontSize: 20,
+        width: 300,
+        color: "#2353aa",
     },
 });

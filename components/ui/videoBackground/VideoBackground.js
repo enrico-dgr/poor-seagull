@@ -3,19 +3,27 @@ import React from "react";
 import { Video } from "expo-av";
 // style
 import style from "./videoStyle";
-// assets
+// PROPTYPES
+import PropTypes from "prop-types";
 
-const VideoBackground = () => {
-  return (
-    <Video
-      style={style.backgroundVideo}
-      source={require("../../../assets/seagulBg.mp4")}
-      resizeMode="cover"
-      isLooping
-      isMuted
-      shouldPlay={true}
-    />
-  );
+const VideoBackground = (props) => {
+    return (
+        <Video
+            style={style.backgroundVideo}
+            source={props.video}
+            resizeMode="cover"
+            isLooping
+            isMuted
+            shouldPlay={true}
+        />
+    );
+};
+VideoBackground.defaultProps = {
+    video: "",
+};
+
+VideoBackground.propTypes = {
+    video: PropTypes.string,
 };
 
 export default VideoBackground;

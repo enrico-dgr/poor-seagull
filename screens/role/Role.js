@@ -1,30 +1,31 @@
 import React from "react";
+// STYLE
+import { useFonts } from "expo-font";
+import style from "./style";
 
-// rn
-import { StyleSheet, Text, View } from "react-native";
+// RN
+import { Text, View } from "react-native";
 
-// components
+// COMPONENTS
 import Swiper from "react-native-web-swiper";
-import InputBox from "../../components/ui/InputBox";
-import PressableButton from "../../components/ui/PressableButton";
+import InputBox from "../../components/ui/inputBox/InputBox";
+import PressableButton from "../../components/ui/pressableButton/PressableButton";
+import CardRules from "../../components/ui/cardRules/CardRules";
 
 // REACT ROUTER DOM
 import { useNavigate } from "react-router-dom";
 
-// STYLE
-import { useFonts } from "expo-font";
-
-// redux
+// REDUX
 import { connect } from "react-redux";
 
-// websocket
+// WSS
 import gameWss from "../../services/gameWss";
-import CardRules from "../../components/ui/cardRules/CardRules";
+
 // Images
-import SeagulOne from "../../assets/seagul/seagull1.png";
-import SeagulTwo from "../../assets/seagul/seagull2.png";
-import SeaOne from "../../assets/seagul/sea1.jpeg";
-import SeaTwo from "../../assets/seagul/sea2.jpeg";
+import SeagulOne from "../../assets/seagull/seagull1.png";
+import SeagulTwo from "../../assets/seagull/seagull2.png";
+import SeaOne from "../../assets/seagull/sea1.jpeg";
+import SeaTwo from "../../assets/seagull/sea2.jpeg";
 
 const Role = (props) => {
     let navigate = useNavigate();
@@ -64,28 +65,28 @@ const Role = (props) => {
         return null;
     }
     return (
-        <View style={styles.container}>
+        <View style={style.container}>
             <Swiper>
-                <View style={[styles.slideContainer]}>
+                <View style={[style.slideContainer]}>
                     <CardRules
                         ruleTitle="Welcome"
-                        textOne="Lorem Ipsum is simply dummy text of  "
-                        textTwo="Lorem Ipsum is simply dummy text of "
+                        textOne="Rock, Paper, Scissors "
+                        textTwo="Poor Seagull Style"
                         ruleImage={SeagulOne}
                         imageBg={SeaOne}
                     />
                 </View>
-                <View style={[styles.slideContainer]}>
+                <View style={[style.slideContainer]}>
                     <CardRules
                         ruleTitle="Rules"
-                        textOne="Lorem Ipsum is simply dummy text of "
-                        textTwo="Lorem Ipsum is simply dummy text of "
+                        textOne="Create or Choose the Lobby "
+                        textTwo="Challenge your friends "
                         ruleImage={SeagulTwo}
                         imageBg={SeaTwo}
                     />
                 </View>
-                <View style={[styles.slideContainer, styles.slide3]}>
-                    <Text style={styles.text}>Input Username</Text>
+                <View style={[style.slideContainer, style.slide3]}>
+                    <Text style={style.text}>Input Username</Text>
                     <InputBox
                         placeholder="Username"
                         onChangeText={onChangeText}
@@ -99,30 +100,6 @@ const Role = (props) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    slideContainer: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    text: {
-        fontFamily: "Toons",
-        fontSize: 20,
-    },
-    //   slide1: {
-    //     backgroundColor: "rgba(20,20,200,0.3)",
-    //   },
-    //   slide2: {
-    //     backgroundColor: "rgba(20,200,20,0.3)",
-    //   },
-    slide3: {
-        backgroundColor: "rgba(200,20,20,0.3)",
-    },
-});
 
 const mapStateToProps = (state) => ({ name: state.user.name });
 
