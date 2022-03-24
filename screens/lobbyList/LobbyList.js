@@ -45,7 +45,7 @@ const LobbyList = (props) => {
 				button={"ENTER"}
 				buttonDisabled={lobby.game.phase > 0}
 				owner={lobby?.creator?.name}
-				changePageCallback={changePage(lobby.id)}
+				onPressButton={changePage(lobby.id)}
 				key={lobby?.id}
 				nPlayers={
 					lobby.game.phase > 0

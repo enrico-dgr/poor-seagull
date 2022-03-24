@@ -27,7 +27,7 @@ const CardLobby = (props) => {
 			<Text style={style.text}>Owner: {props.owner}</Text>
 			<View style={{ justifyContent: "center", alignItems: "center" }}>
 				<Pressable
-					onPress={props.buttonDisabled && props.onPressButton}
+					onPress={props.buttonDisabled ? undefined : props.onPressButton}
 					style={({ pressed }) => [
 						{
 							backgroundColor: pressed ? "#6B9DFA" : "#567df7",
